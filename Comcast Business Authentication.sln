@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comcast Business Authentication", "Comcast Business Authentication.csproj", "{2258388C-595E-4960-8A88-1EB83D1FD4C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A927AFE9-19A2-46D6-A1B6-618FCD81F488}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{CCF6B00B-850F-4B35-AE6F-84F66C081A9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2258388C-595E-4960-8A88-1EB83D1FD4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2258388C-595E-4960-8A88-1EB83D1FD4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2258388C-595E-4960-8A88-1EB83D1FD4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2258388C-595E-4960-8A88-1EB83D1FD4C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCF6B00B-850F-4B35-AE6F-84F66C081A9D} = {A927AFE9-19A2-46D6-A1B6-618FCD81F488}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA0C677B-C097-4737-8A1D-BB11B5BC1C4B}
+	EndGlobalSection
+EndGlobal
