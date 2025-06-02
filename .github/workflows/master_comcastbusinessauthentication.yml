@@ -1,0 +1,64 @@
+﻿# .github/workflows/auth-header.yml
+
+name: Comcast Business Authentication
+
+# ── Trigger either manually or on a cron schedule every 55 minutes ──
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/55 * * * *"     # every 55 minutes; adjust as needed
+
+jobs:
+  headed-playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15       # timeout if Comcast hangs
+
+    env:
+      BV_EMAIL: ${{ secrets.BV_EMAIL }}
+      BV_PASS:  ${{ secrets.BV_PASS }}
+      # If you use App Insights or Upstash in your code, include their secrets too:
+      APPINSIGHTS_CONNECTION: ${{ secrets.APPINSIGHTS_CONNECTION }}
+      UPSTASH_REDIS_REST_URL:   ${{ secrets.UPSTASH_REDIS_REST_URL }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+
+    steps:
+
+      # 1. Check out your repo so the .csproj and source files are available
+      - name: "⬇️ Checkout repository"
+        uses: actions/checkout@v4
+
+      # 2. Install .NET 8 SDK so we can build/run your console app
+      - name: "🦊 Setup .NET 8"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # 3. Restore & build (Release) your Console app
+      - name: "📦 Restore NuGet packages"
+        run: dotnet restore "Comcast Business Authentication.csproj"
+
+      - name: "🔨 Build Release"
+        run: dotnet build --configuration Release --no-restore "Comcast Business Authentication.csproj"
+
+      # 4. Cache Playwright’s browser binaries so we don’t reinstall each run
+      - name: "📥 Cache Playwright"
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/GlobalLockfile') }}
+
+      # 5. Only if cache missed: install the browsers (Chromium/WebKit/Firefox)
+      - name: "▶️ Install Playwright Browsers (if needed)"
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: |
+          dotnet tool install --global Microsoft.Playwright.CLI --version 1.43.0
+          # Ensure the .NET tool folder is on PATH
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          playwright install --with-deps
+
+      # 6. Run your console app under xvfb so Chromium is “headed” on Linux
+      - name: "🏃 Run token fetcher (headed)"
+        run: |
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' \
+            dotnet run --project "Comcast Business Authentication.csproj" --configuration Release
