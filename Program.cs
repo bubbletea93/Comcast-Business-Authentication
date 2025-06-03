@@ -21,10 +21,10 @@ class Program
         Console.WriteLine(">>> Fetched fresh tokens:");
         Console.WriteLine(json);
 
-        // 3. Store in Redis with a suitable TTL (e.g. 15 minutes)
-        //    Adjust the TTL based on how long these tokens remain valid in BusinessVoice.
-        var ttl = TimeSpan.FromMinutes(55);
-        await RedisHelper.SetStringAsync(CacheKey, json, ttl);
+        // 3. Store in Redis only after a successful fetch
+        var ttl = TimeSpan.FromMinutes(58);
+        await RedisHelper.SetStringAsync(CacheKey, json);
+        await RedisHelper.KeyExpireAsync(CacheKey, ttl);
 
         Console.WriteLine($">>> Tokens cached under '{CacheKey}' for {ttl.TotalMinutes} minutes.");
     }

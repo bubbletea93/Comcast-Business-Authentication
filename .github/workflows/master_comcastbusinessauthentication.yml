@@ -2,14 +2,15 @@
 
 name: Comcast Business Authentication
 
-# ── Trigger either manually or on a cron schedule every 55 minutes ──
+# ── Trigger either manually or on a cron schedule every 45 minutes ──
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/55 * * * *"     # every 55 minutes; adjust as needed
+    - cron: "*/45 * * * *"     # every 45 minutes; adjust as needed
 
 jobs:
   headed-playwright:
+    concurrency: comcast-auth
     runs-on: ubuntu-latest
     timeout-minutes: 15       # timeout if Comcast hangs
 
