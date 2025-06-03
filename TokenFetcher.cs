@@ -23,7 +23,21 @@ public sealed class TokenFetcher
         ]
     };
 
-    public static async Task<string> GetTokensAsync()
+    public static async Task<string> GetTokensAsync(int attempts = 3)
+    {
+        for (var i = 1; i <= attempts; i++)
+        {
+            try { return await DoFetchAsync(); }
+            catch when (i < attempts)
+            {
+                Console.WriteLine($"Fetch failed (try {i}) – retrying in 10 s");
+                await Task.Delay(TimeSpan.FromSeconds(10));
+            }
+        }
+        throw new Exception($"Playwright failed after {attempts} attempts");
+    }
+
+    private static async Task<string> DoFetchAsync()
     {
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(browserTypeLaunchOptions);

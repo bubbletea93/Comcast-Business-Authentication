@@ -28,11 +28,19 @@ namespace Comcast_Business_Authentication.Utilities
         }
 
         /// <summary>
-        /// Sets a string value with an expiration TTL.
+        /// Sets a string value without altering the TTL.
         /// </summary>
-        public static async Task SetStringAsync(string key, string value, TimeSpan ttl)
+        public static async Task SetStringAsync(string key, string value)
         {
-            await Database.StringSetAsync(key, value, ttl);
+            await Database.StringSetAsync(key, value);
+        }
+
+        /// <summary>
+        /// Updates the expiration time for a cached key.
+        /// </summary>
+        public static async Task KeyExpireAsync(string key, TimeSpan ttl)
+        {
+            await Database.KeyExpireAsync(key, ttl);
         }
     }
 }
