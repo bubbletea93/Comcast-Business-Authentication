@@ -16,10 +16,8 @@ jobs:
     env:
       BV_EMAIL: ${{ secrets.BV_EMAIL }}
       BV_PASS:  ${{ secrets.BV_PASS }}
-      # If you use App Insights or Upstash in your code, include their secrets too:
-      APPINSIGHTS_CONNECTION: ${{ secrets.APPINSIGHTS_CONNECTION }}
-      UPSTASH_REDIS_REST_URL:   ${{ secrets.UPSTASH_REDIS_REST_URL }}
-      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+      REDIS_ENDPOINT:   ${{ secrets.REDIS_ENDPOINT }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
 
     steps:
 
@@ -48,14 +46,15 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('**/GlobalLockfile') }}
 
-      # 5. Only if cache missed: install the browsers (Chromium/WebKit/Firefox)
-      - name: "▶️ Install Playwright Browsers (if needed)"
+       # 5. Only if cache missed: run the *local* Playwright script produced by the build
+      - name: "▶️ Install Playwright browsers (if needed)"
         if: steps.playwright-cache.outputs.cache-hit != 'true'
+        shell: pwsh
         run: |
-          dotnet tool install --global Microsoft.Playwright.CLI --version 1.43.0
-          # Ensure the .NET tool folder is on PATH
-          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-          playwright install --with-deps
+          $projectPath = "Comcast Business Authentication.csproj"
+          $projectDir  = (Resolve-Path $projectPath).ProviderPath | Split-Path -Parent
+          $buildDir    = Join-Path $projectDir "bin/Release/net8.0"
+          & "$buildDir/playwright.ps1" install --with-deps
 
       # 6. Run your console app under xvfb so Chromium is “headed” on Linux
       - name: "🏃 Run token fetcher (headed)"
