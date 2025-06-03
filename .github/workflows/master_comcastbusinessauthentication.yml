@@ -6,7 +6,7 @@ name: Comcast Business Authentication
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/45 * * * *"     # every 45 minutes; adjust as needed
+    - cron: "0 * * * *"    # every hour on the hour
 
 jobs:
   headed-playwright:
