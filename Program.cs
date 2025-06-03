@@ -12,14 +12,12 @@ class Program
         if (!string.IsNullOrEmpty(cachedJson))
         {
             Console.WriteLine(">>> Returning cached tokens:");
-            Console.WriteLine(cachedJson);
             return;
         }
 
         // 2. Not in cache: fetch via Playwright
         var json = await TokenFetcher.GetTokensAsync();
         Console.WriteLine(">>> Fetched fresh tokens:");
-        Console.WriteLine(json);
 
         // 3. Store in Redis only after a successful fetch
         var ttl = TimeSpan.FromMinutes(58);
