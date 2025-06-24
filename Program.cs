@@ -7,19 +7,11 @@ class Program
 
     public static async Task Main()
     {
-        // 1. Try to read from Redis first
-        var cachedJson = await RedisHelper.GetStringAsync(CacheKey);
-        if (!string.IsNullOrEmpty(cachedJson))
-        {
-            Console.WriteLine(">>> Returning cached tokens:");
-            return;
-        }
-
-        // 2. Not in cache: fetch via Playwright
+        // Always fetch fresh tokens on every run
         var json = await TokenFetcher.GetTokensAsync();
         Console.WriteLine(">>> Fetched fresh tokens:");
 
-        // 3. Store in Redis only after a successful fetch
+        // Store in Redis so other services can consume them
         var ttl = TimeSpan.FromMinutes(58);
         await RedisHelper.SetStringAsync(CacheKey, json);
         await RedisHelper.KeyExpireAsync(CacheKey, ttl);
