@@ -2,11 +2,8 @@
 
 name: Comcast Business Authentication
 
-# ── Trigger either manually or on a cron schedule every 45 minutes ──
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 * * * *"    # every hour on the hour
 
 jobs:
   headed-playwright:
