@@ -4,6 +4,11 @@ name: Comcast Business Authentication
 
 on:
   workflow_dispatch:
+    inputs:
+      session_id:
+        description: 'Session ID for progress tracking'
+        required: false
+        type: string
 
 jobs:
   headed-playwright:
@@ -16,6 +21,9 @@ jobs:
       BV_PASS:  ${{ secrets.BV_PASS }}
       REDIS_ENDPOINT:   ${{ secrets.REDIS_ENDPOINT }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SESSION_ID: ${{ inputs.session_id }}
 
     steps:
 
